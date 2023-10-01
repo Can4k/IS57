@@ -1,23 +1,23 @@
 <script setup>
-import {useStore} from "vuex";
-import {onMounted, ref} from "vue";
-import {useRouter} from "vue-router";
+import { useStore } from "vuex";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
-const router = useRouter()
-const store = useStore()
+const router = useRouter();
+const store = useStore();
 
-const Timer = ref('');
+const Timer = ref("");
 
 onMounted(() => {
   CalculateStart();
-  setInterval(() => CalculateStart(), 1000)
+  setInterval(() => CalculateStart(), 1000);
 });
 
 function CalculateStart() {
   let TimeToStart = new Date(store.state.StartDate).getTime() - Date.now();
 
   if (TimeToStart <= 0) {
-    return router.push('/menu');
+    return router.push("/menu");
   }
 
   TimeToStart = Math.floor(TimeToStart / 1000);
@@ -32,7 +32,7 @@ function CalculateStart() {
     TimerValue += hours;
   }
 
-  TimerValue += ':';
+  TimerValue += ":";
   TimeToStart %= 3600;
   let minutes = Math.floor(TimeToStart / 60);
   if (minutes === 0) {
@@ -43,7 +43,7 @@ function CalculateStart() {
     TimerValue += minutes;
   }
 
-  TimerValue += ':';
+  TimerValue += ":";
   TimeToStart %= 60;
   if (TimeToStart === 0) {
     TimerValue += "00";
@@ -62,7 +62,7 @@ function CalculateStart() {
   <div class="timer-page">
     <div class="timer text-burning">
       <div>
-        <img class="potter-flying" alt="Гарри Поттер" src="@/assets/Images/Potter2.png"/>
+        <img class="potter-flying" alt="Гарри Поттер" src="@/assets/Images/Potter2.png" />
       </div>
       {{ Timer }}
     </div>
@@ -102,7 +102,7 @@ function CalculateStart() {
   }
 
   50% {
-    transform:  translateY(-50px) rotate(-15deg);
+    transform: translateY(-50px) rotate(-15deg);
   }
 }
 </style>

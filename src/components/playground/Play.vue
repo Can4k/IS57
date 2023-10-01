@@ -4,15 +4,17 @@ import {computed, defineAsyncComponent, onMounted, ref, watch} from "vue";
 import {useWindowSize} from '@vueuse/core'
 import {useElementSize} from '@vueuse/core'
 
-
+const HarryPotter = defineAsyncComponent(() => import("@/components/playground/HarryPotter.vue"));
 const Castle = defineAsyncComponent(() => import("@/components/playground/Castle.vue"));
 
 const props = defineProps({
   results: {type: Object},
+  modelValue: {},
 })
 
 const emit = defineEmits([
-  'ready'
+  'ready',
+  'update:modelValue'
 ])
 
 const loaded = ref(false)
@@ -39,7 +41,7 @@ const {height} = useWindowSize()
 const {width} = useElementSize(PlayRef)
 
 const PlayProportion = .45
-const MaximalHeightProportion = .8;
+const MaximalHeightProportion = .6;
 const MaximalWidthProportion = .2;
 
 const MinimalHeight = 100;
@@ -71,7 +73,17 @@ const MountainsStyle = computed(() => {
 const MountainsTranslateX = ref(0)
 const TranslateX = ref(100);
 const TranslateY = ref(0);
-const PrevId = ref(-1);
+
+const PrevId = computed({
+  get: () => {
+    return props.modelValue
+  },
+  set(val) {
+    emit('update:modelValue', val);
+  }
+})
+
+const direction = ref(1);
 
 function go(params) {
   const {id} = params;
@@ -92,6 +104,12 @@ function go(params) {
     ) + 32;
   }
 
+  if (cur_pos - prev_pos < 0) {
+    direction.value = 2;
+  } else {
+    direction.value = 1;
+  }
+
   PrevId.value = id;
   TranslateX.value -= cur_pos - prev_pos;
   MountainsTranslateX.value -= (cur_pos - prev_pos);
@@ -109,10 +127,9 @@ onMounted(() => {
 <template>
   <div ref="PlayRef" class="Play" :style="PlayStyle" v-if="loaded">
     <div :style="MountainsStyle" class="Mountains">
-
     </div>
 
-
+    <HarryPotter :direction="direction"/>
 
     <div :style="CastlesStyle" class="Castles">
       <Castle
@@ -132,6 +149,7 @@ onMounted(() => {
           :key="result"
 
           @go="go"
+          :picked="PrevId === result?.team?.id"
       />
     </div>
   </div>
@@ -140,6 +158,7 @@ onMounted(() => {
 <style scoped>
 .Play {
   background-color: #00001c;
+  box-shadow: 0 0 20px -8px #000017;
 
   overflow: hidden;
 
@@ -172,7 +191,7 @@ onMounted(() => {
   height: 300px;
   width: 100%;
 
-  background-image: url("@/assets/Images/Mountains2.png");
+  background-image: url("@/assets/textures/Mountains2.png");
   transition-duration: .5s;
 }
 </style>

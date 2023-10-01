@@ -1,24 +1,32 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import { onMounted, ref, watch } from "vue";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import Loader from "@/components/Loader.vue";
+import { useWindowSize } from "@vueuse/core";
 
 const router = useRouter()
 const store = useStore()
 
-const ShowRouter = ref(false);
+const {width, height} = useWindowSize()
+onMounted(() => {
+  document.documentElement.style.setProperty('--app-height', height.value + 'px');
+  watch(() => height.value, () => {
+    document.documentElement.style.setProperty('--app-height', height.value + 'px');
+  })
+})
 
+const ShowRouter = ref(false);
 onMounted(async () => {
   store.commit('LoaderModule/increment');
 
   await store.dispatch("GetStartDate");
 
-  /* if (store.state.StartDate <= Date.now()) {
+   if (store.state.StartDate <= Date.now()) {
      await router.push('/menu')
    } else {
      await router.push('/')
-   }*/
+   }
 
   store.commit('LoaderModule/decrement');
   ShowRouter.value = true;
@@ -57,8 +65,9 @@ onMounted(async () => {
 }
 
 * {
-  --background: #282832;
-  --gold: gold
+  --background: #00001c;
+  --gold: gold;
+  --parchment: #00001c;
 }
 
 .text-burning {
@@ -84,6 +93,20 @@ onMounted(async () => {
 
 .v-enter-from,
 .v-leave-to {
+  opacity: 0;
+}
+
+.fade-without-leave-leave-from {
+  opacity: 0;
+}
+
+.fade-without-leave-enter-active,
+.fade-without-leave-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-without-leave-enter-from,
+.fade-without-leave-leave-to {
   opacity: 0;
 }
 
@@ -118,11 +141,14 @@ onMounted(async () => {
 
 .signature {
   position: fixed;
-  bottom: 24px;
+  bottom: 36px;
   left: 50%;
   transform: translateX(-50%);
-  opacity: .2;
+  opacity: 1;
   z-index: -100;
+  background-color: rgba(230, 230, 250, 0.1);
+  padding: 12px;
+  border-radius: 14px;
 }
 </style>
 
