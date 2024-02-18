@@ -62,7 +62,7 @@ function CalculateStart() {
   <div class="timer-page">
     <div class="timer text-burning">
       <div>
-        <img class="potter-flying" alt="Гарри Поттер" src="@/assets/Images/Potter2.png" />
+        <img class="potter-flying" alt="Гарри Поттер" src="@/assets/images/Potter2.png" />
       </div>
       {{ Timer }}
     </div>

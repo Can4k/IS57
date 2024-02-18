@@ -66,7 +66,6 @@ const ShowAllStat = ref(false);
 function InitShowAllStat() {
   ShowAllStat.value = true;
 }
-
 </script>
 
 <template>
@@ -154,6 +153,12 @@ function InitShowAllStat() {
     letter-spacing: -1px;
     font-size: 64px;
     margin: 36px 0;
+  }
+}
+
+@media screen and (min-height: 700px){
+  .play-container {
+    margin-top: 120px;
   }
 }
 </style>

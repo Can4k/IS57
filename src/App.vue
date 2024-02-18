@@ -1,34 +1,35 @@
 <script setup>
 import { onMounted, ref, watch } from "vue";
-import {useRouter} from "vue-router";
-import {useStore} from "vuex";
-import Loader from "@/components/Loader.vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 import { useWindowSize } from "@vueuse/core";
+import Loader from "@/components/Loader.vue";
 
-const router = useRouter()
-const store = useStore()
+const router = useRouter();
+const store = useStore();
 
-const {width, height} = useWindowSize()
+const { height } = useWindowSize();
 onMounted(() => {
-  document.documentElement.style.setProperty('--app-height', height.value + 'px');
+  document.documentElement.style.setProperty("--app-height", height.value + "px");
   watch(() => height.value, () => {
-    document.documentElement.style.setProperty('--app-height', height.value + 'px');
-  })
-})
+    document.documentElement.style.setProperty("--app-height", height.value + "px");
+  });
+});
 
 const ShowRouter = ref(false);
 onMounted(async () => {
-  store.commit('LoaderModule/increment');
+  store.commit("LoaderModule/increment");
 
   await store.dispatch("GetStartDate");
 
-   if (store.state.StartDate <= Date.now()) {
-     await router.push('/menu')
-   } else {
-     await router.push('/')
-   }
+  if (store.state.StartDate <= Date.now()) {
+    await router.push("/menu");
+  } else {
+    await router.push("/");
+  }
 
-  store.commit('LoaderModule/decrement');
+  store.commit("LoaderModule/decrement");
+  
   ShowRouter.value = true;
 });
 
@@ -39,15 +40,19 @@ onMounted(async () => {
     <div v-if="ShowRouter" class="app-wrapper">
       <router-view v-slot="{ Component }">
         <transition mode="out-in">
-          <component :is="Component"/>
+          <component :is="Component" />
         </transition>
       </router-view>
 
-      <img class="signature" src="@/assets/Images/USUS.png" alt="Сделано учениками 11И класса">
+      <footer>
+        <img class="signature" src="@/assets/images/USUS.png" alt="Сделано учениками 11И класса">
+        <img class="signature-mini" src="@/assets/images/USUS-mini.png" alt="Сделано учениками 11И класса">
+        <img class="israel" src="@/assets/images/IsraelFlag.png" alt="Израиль, мы с тобой.">
+      </footer>
     </div>
   </transition>
   <transition>
-    <Loader v-show="store.state.LoaderModule.ShowLoader"/>
+    <Loader v-show="store.state.LoaderModule.ShowLoader" />
   </transition>
 </template>
 
@@ -139,16 +144,58 @@ onMounted(async () => {
   }
 }*/
 
+.signature-mini {
+  background-color: rgba(230, 230, 250, 0.1);
+  padding: 12px;
+  border-radius: 12px;
+}
+
 .signature {
+  background-color: rgba(230, 230, 250, 0.1);
+  padding: 12px;
+  border-radius: 14px;
+}
+
+.israel {
+  background-color: rgba(230, 230, 250, 0.1);
+  padding: 12px;
+  border-radius: 14px;
+  height: 64px;
+  margin-left: 12px;
+}
+
+footer {
+  z-index: -100;
   position: fixed;
   bottom: 36px;
   left: 50%;
   transform: translateX(-50%);
-  opacity: 1;
-  z-index: -100;
-  background-color: rgba(230, 230, 250, 0.1);
-  padding: 12px;
-  border-radius: 14px;
+  height: 64px;
+  width: 370px;
+}
+
+@media screen and (max-width: 500px) {
+  .signature-mini {
+    display: revert;
+  }
+  .signature {
+    display: none;
+  }
+
+  footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media screen and (min-width: 501px) {
+  .signature-mini {
+    display: none;
+  }
+  .signature {
+    display: revert;
+  }
 }
 </style>
 

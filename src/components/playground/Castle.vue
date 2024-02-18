@@ -1,5 +1,4 @@
 <script setup>
-
 import { computed, onMounted, ref } from "vue";
 
 const emit = defineEmits([
@@ -54,7 +53,7 @@ onMounted(() => {
       <b>{{Level}}</b> {{Title}}
     </div>
 
-    <img alt="Top" class="Top" src="@/assets/Images/TowerTop.png">
+    <img alt="Top" class="Top" src="@/assets/textures/TowerTop.png">
     <div :style="BottomStyle" class="Bottom">
       {{result.team.totalResult}}
     </div>

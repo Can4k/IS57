@@ -15,7 +15,7 @@ watch(() => props.direction, (val) => {
 </script>
 
 <template>
-  <img alt="Гарри Поттер" :style="PotterStyle" class="harry-potter" src="@/assets/Images/HarryPotter.png">
+  <img alt="Гарри Поттер" :style="PotterStyle" class="harry-potter" src="@/assets/textures/HarryPotter.png">
 </template>
 
 <style scoped>

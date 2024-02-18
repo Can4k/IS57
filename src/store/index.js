@@ -49,6 +49,16 @@ export default createStore({
                 Result.List.push(data[block_id]);
             }
 
+            Result.List = Result.List.sort((team1, team2) => {
+                if (team1.team.name.slice(0, 2) === '8Я') {
+                    return -1;
+                } else {
+                    let rnd1 = Math.random();
+                    let rnd2 = Math.random();
+                    return rnd1 < rnd2 ? -1 : rnd1 === rnd2 ? 0 : 1;
+                }
+            })
+
             let TotalResultsArray = [];
 
             let FirstResultArray = [];

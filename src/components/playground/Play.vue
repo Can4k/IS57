@@ -44,8 +44,8 @@ const PlayProportion = .45
 const MaximalHeightProportion = .6;
 const MaximalWidthProportion = .2;
 
-const MinimalHeight = 100;
-const MinimalWidth = 50;
+const MinimalHeight = 10;
+const MinimalWidth = 10;
 
 const MaximalWidth = 700;
 
@@ -64,6 +64,7 @@ const CastlesStyle = computed(() => {
   }
 })
 
+const MountainsCoff = .1;
 const MountainsStyle = computed(() => {
   return {
     backgroundPositionX: `${MountainsTranslateX.value}` + 'px',
@@ -104,6 +105,10 @@ function go(params) {
     ) + 32;
   }
 
+  if (Math.abs(cur_pos - prev_pos) <= 1e-6) {
+    return
+  }
+
   if (cur_pos - prev_pos < 0) {
     direction.value = 2;
   } else {
@@ -112,7 +117,7 @@ function go(params) {
 
   PrevId.value = id;
   TranslateX.value -= cur_pos - prev_pos;
-  MountainsTranslateX.value -= (cur_pos - prev_pos);
+  MountainsTranslateX.value -= (cur_pos - prev_pos) * MountainsCoff;
 }
 
 onMounted(() => {
@@ -121,6 +126,47 @@ onMounted(() => {
     TranslateY.value = 0;
   }, 500)
 })
+
+// Swipe logic
+onMounted(() => {
+  const MIN_X_DELTA = 40;
+
+  let touchstartX = 0
+  let touchendX = 0
+
+
+  const checkDirection = () => {
+    if (touchendX < touchstartX && Math.abs(touchendX - touchstartX) >= MIN_X_DELTA) return -1;
+    if (touchendX > touchstartX && Math.abs(touchendX - touchstartX) >= MIN_X_DELTA) return 1;
+    return 0;
+  }
+
+  document.addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX;
+  })
+
+  document.addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    const dir = -checkDirection();
+
+    if (!dir) {
+      return
+    }
+
+    if (!props.results) {
+      return;
+    }
+
+    const PickedTowerIndex = props.results.List.findIndex(el => el.team.id === PrevId.value);
+
+    if (PickedTowerIndex + dir >= 0 && PickedTowerIndex + dir < props.results.List.length) {
+      go({
+        id: props.results.List[PickedTowerIndex + dir].team.id
+      });
+    }
+  })
+})
+
 
 </script>
 

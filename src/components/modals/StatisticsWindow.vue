@@ -1,18 +1,22 @@
 <script setup>
 const emit = defineEmits([
-  'close_window'
-])
+  "close_window"
+]);
 
 const props = defineProps({
-  result: {type: Object}
-})
+  result: { type: Object }
+});
 
+const CloseWindow = () => {
+  emit('close_window')
+}
 </script>
 
 <template>
   <div class="modal-wrapper">
     <div class="statisitcs-window">
-      <svg @click="emit('close_window')" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+      <svg @click="CloseWindow" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
+           stroke-width="2" fill="none"
            stroke-linecap="round" stroke-linejoin="round" class="close-svg">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -20,25 +24,28 @@ const props = defineProps({
 
       <h3>Подробная статистика</h3>
 
-      <div class="team-title">
-        Название - <b>{{result?.team?.name}}</b>
+      <div class="header-stat">
+        <div class="team-title">
+          <b>«{{ result?.team?.name }}»</b>
+        </div>
+
+        <div class="team-title">
+          Общий счет: <b>{{ result?.team?.totalResult }}</b>
+        </div>
       </div>
 
-      <div class="team-title">
-        Общий счет - <b>{{result?.team?.totalResult}}</b>
-      </div>
+      <hr>
 
-      <div>
-        <h4>По заданиям: </h4>
-        <div class="result-block" v-for="result in result?.results ?? []">
+      <div class="results">
+        <div class="result-block" v-for="result in result?.results ?? []" :key="result?.taskInfo?.name">
           <div class="subject">
-            {{result?.taskInfo?.subject.toUpperCase()}}
+            {{ result?.taskInfo?.subject.toUpperCase() }}
           </div>
 
           <div class="name">
-            {{result?.taskInfo?.name}} -
+            {{ result?.taskInfo?.name }} -
             <span class="result">
-            {{result?.result}}
+            {{ result?.result }}
           </span>
           </div>
         </div>
@@ -127,7 +134,7 @@ h3 {
 
 .team-title > b {
   font-weight: normal;
-  color: #cccccc;
+  color: #eee;
 }
 
 h4 {
@@ -142,7 +149,7 @@ h4 {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  margin-bottom: 12px;
+  margin: 12px;
 }
 
 .subject {
@@ -153,9 +160,23 @@ h4 {
   font-family: 'HarryPotter', sans-serif;
   font-size: 12px;
 }
+
 .name {
+  font-size: 18px;
   margin-top: 4px;
   font-family: 'HarryPotter', sans-serif;
-  color: #cccccc;
+  color: #eee;
+}
+
+.header-stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.results {
+  display: flex;
+  flex-wrap: wrap;
+
 }
 </style>
